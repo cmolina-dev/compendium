@@ -1,0 +1,54 @@
+---
+interface Props {
+  title: string;
+  slug: string;
+  description?: string;
+  count: number;
+  icon?: string;
+}
+
+const { title, slug, description, count, icon = "📁" } = Astro.props;
+---
+
+<a href={`/topics/${slug}`} class="category-card retro-card">
+  <div class="retro-card__header">
+    <span class="category-card__icon">{icon}</span>
+    <h3 class="retro-card__title">{title}</h3>
+  </div>
+  <div class="retro-card__body">
+    {description && <p class="category-card__description">{description}</p>}
+  </div>
+  <div class="retro-card__footer">
+    <span class="retro-badge">{count} {count === 1 ? 'artículo' : 'artículos'}</span>
+  </div>
+</a>
+
+<style>
+  .category-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .category-card__icon {
+    font-size: 1.5rem;
+    margin-right: var(--spacing-sm);
+  }
+
+  .category-card__description {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .retro-card__header {
+    display: flex;
+    align-items: center;
+  }
+
+  .retro-card__body {
+    flex: 1;
+  }
+</style>

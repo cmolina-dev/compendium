@@ -1,0 +1,129 @@
+---
+/**
+ * Marcador de página (ribbon bookmark)
+ * Sobresale del borde superior del libro para navegación rápida
+ */
+interface Props {
+  href: string;
+  label: string;
+  color?: 'red' | 'blue' | 'green' | 'gold';
+  icon?: string;
+  active?: boolean;
+}
+
+const { href, label, color = 'red', icon = '§', active = false } = Astro.props;
+
+const colorClasses: Record<string, string> = {
+  red: 'bookmark--red',
+  blue: 'bookmark--blue',
+  green: 'bookmark--green',
+  gold: 'bookmark--gold'
+};
+---
+
+<a 
+  href={href} 
+  class={`bookmark ${colorClasses[color]} ${active ? 'bookmark--active' : ''}`}
+  title={label}
+  aria-label={`Ir a ${label}`}
+>
+  <span class="bookmark__icon" aria-hidden="true">{icon}</span>
+  <span class="bookmark__tooltip">{label}</span>
+</a>
+
+<style>
+  .bookmark {
+    position: relative;
+    width: 28px;
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: var(--space-3);
+    text-decoration: none;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    
+    /* Forma de cinta con punta */
+    clip-path: polygon(
+      0 0, 
+      100% 0, 
+      100% calc(100% - 12px), 
+      50% 100%, 
+      0 calc(100% - 12px)
+    );
+    
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+  }
+
+  .bookmark:hover {
+    transform: translateY(-10px);
+    box-shadow: 2px 4px 8px rgba(0,0,0,0.4);
+  }
+
+  .bookmark--active {
+    transform: translateY(-15px);
+  }
+
+  /* Colores */
+  .bookmark--red { background: linear-gradient(135deg, #b83030 0%, #8a2020 100%); }
+  .bookmark--blue { background: linear-gradient(135deg, #3a5a8a 0%, #2a4a6a 100%); }
+  .bookmark--green { background: linear-gradient(135deg, #3a6a4a 0%, #2a5a3a 100%); }
+  .bookmark--gold { background: linear-gradient(135deg, #c8a540 0%, #a08030 100%); }
+
+  .bookmark__icon {
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+  }
+
+  .bookmark__tooltip {
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 10px);
+    transform: translateY(-50%);
+    background: var(--page-cream);
+    color: var(--ink-black);
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    padding: var(--space-2) var(--space-3);
+    border-radius: 2px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-fast), visibility var(--transition-fast);
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+    z-index: 100;
+    
+    /* Flecha */
+    &::before {
+      content: '';
+      position: absolute;
+      right: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 6px solid transparent;
+      border-right-color: var(--page-cream);
+    }
+  }
+
+  .bookmark:hover .bookmark__tooltip,
+  .bookmark:focus .bookmark__tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Detalle de costura */
+  .bookmark::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 2px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 1px;
+  }
+</style>

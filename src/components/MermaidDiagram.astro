@@ -1,0 +1,110 @@
+---
+/**
+ * Componente para renderizar diagramas Mermaid
+ * Estilizado como un recorte de papel técnico pegado en la página
+ */
+interface Props {
+  chart: string;
+  caption?: string;
+}
+
+const { chart, caption } = Astro.props;
+const diagramId = `mermaid-${Math.random().toString(36).substring(7)}`;
+---
+
+<figure class="mermaid-figure">
+  <div class="mermaid-paper">
+    <div class="mermaid-tape" aria-hidden="true"></div>
+    <div id={diagramId} class="mermaid-diagram">
+      {chart}
+    </div>
+  </div>
+  {caption && <figcaption class="mermaid-caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .mermaid-figure {
+    margin: var(--space-6) 0;
+  }
+
+  .mermaid-paper {
+    position: relative;
+    background: #fffef8;
+    border: 1px solid #d4cba8;
+    padding: var(--space-6) var(--space-4);
+    box-shadow:
+      3px 3px 8px rgba(0, 0, 0, 0.1),
+      inset 0 0 30px rgba(0, 0, 0, 0.02);
+    transform: rotate(-0.5deg);
+    overflow-x: auto;
+  }
+
+  /* Cinta adhesiva */
+  .mermaid-tape {
+    /* position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 20px;
+    background: rgba(255, 230, 150, 0.7);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
+  }
+
+  .mermaid-diagram {
+    display: flex;
+    justify-content: center;
+    min-height: 80px;
+  }
+
+  .mermaid-diagram :global(svg) {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .mermaid-caption {
+    text-align: center;
+    font-family: var(--font-handwritten);
+    font-size: var(--text-base);
+    color: var(--ink-faded);
+    margin-top: var(--space-3);
+    transform: rotate(-1deg);
+  }
+
+  @media (max-width: 768px) {
+    .mermaid-paper {
+      transform: none;
+      padding: var(--space-4) var(--space-2);
+    }
+  }
+</style>
+
+<script>
+  import mermaid from "mermaid";
+
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "base",
+    themeVariables: {
+      // Colores que combinan con el tema del libro
+      primaryColor: "#e8d5a3",
+      primaryTextColor: "#2c1810",
+      primaryBorderColor: "#8b6914",
+      lineColor: "#5c4033",
+      secondaryColor: "#f4e8c1",
+      tertiaryColor: "#fffef8",
+      background: "#fffef8",
+      mainBkg: "#f4e8c1",
+      nodeBorder: "#8b6914",
+      clusterBkg: "#e8d5a3",
+      clusterBorder: "#8b6914",
+      titleColor: "#2c1810",
+      edgeLabelBackground: "#fffef8",
+      fontFamily: '"Crimson Text", Georgia, serif',
+    },
+    flowchart: {
+      htmlLabels: true,
+      curve: "basis",
+    },
+  });
+</script>

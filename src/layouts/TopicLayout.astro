@@ -1,0 +1,219 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import MermaidDiagram from '../components/MermaidDiagram.astro';
+
+interface Props {
+  frontmatter: {
+    title: string;
+    category: string;
+    description?: string;
+    date: Date;
+    tags?: string[];
+  };
+}
+
+const { frontmatter } = Astro.props;
+const formattedDate = new Date(frontmatter.date).toLocaleDateString('es-ES', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+---
+
+<BaseLayout title={frontmatter.title} description={frontmatter.description}>
+  <article class="topic-article">
+    <!-- Breadcrumbs -->
+    <nav class="breadcrumbs">
+      <a href="/">Home</a>
+      <span class="breadcrumbs__separator">&gt;</span>
+      <a href="/topics">Temas</a>
+      <span class="breadcrumbs__separator">&gt;</span>
+      <a href={`/topics?category=${frontmatter.category}`}>{frontmatter.category}</a>
+      <span class="breadcrumbs__separator">&gt;</span>
+      <span>{frontmatter.title}</span>
+    </nav>
+
+    <!-- Header del artículo -->
+    <header class="topic-header retro-panel">
+      <div class="retro-panel__header">
+        <span class="retro-panel__icon">&#128196;</span>
+        <span class="retro-panel__title">DOCUMENTO</span>
+      </div>
+      <div class="retro-panel__content">
+        <h1 class="topic-header__title">{frontmatter.title}</h1>
+        
+        {frontmatter.description && (
+          <p class="topic-header__description">{frontmatter.description}</p>
+        )}
+        
+        <div class="topic-header__meta">
+          <span class="topic-header__date">
+            <span class="topic-header__icon">&#128197;</span>
+            {formattedDate}
+          </span>
+          <span class="topic-header__category retro-badge--blue retro-badge">
+            {frontmatter.category}
+          </span>
+        </div>
+        
+        {frontmatter.tags && frontmatter.tags.length > 0 && (
+          <div class="topic-header__tags">
+            {frontmatter.tags.map((tag: string) => (
+              <span class="retro-badge--purple retro-badge">{tag}</span>
+            ))}
+          </div>
+        )}
+      </div>
+    </header>
+
+    <!-- Contenido del artículo -->
+    <div class="topic-content retro-panel">
+      <div class="retro-panel__header">
+        <span class="retro-panel__icon">&#128209;</span>
+        <span class="retro-panel__title">CONTENIDO</span>
+      </div>
+      <div class="retro-panel__content prose">
+        <slot />
+      </div>
+    </div>
+
+    <!-- Navegación inferior -->
+    <nav class="topic-nav">
+      <a href="/topics" class="retro-button">
+        &#8592; Volver a Temas
+      </a>
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .topic-article {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .topic-header {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .topic-header__title {
+    font-size: 2rem;
+    color: var(--color-accent-primary);
+    margin-bottom: var(--spacing-sm);
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  .topic-header__description {
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .topic-header__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    flex-wrap: wrap;
+  }
+
+  .topic-header__date {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-family: var(--font-pixel);
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  .topic-header__icon {
+    font-size: 1rem;
+  }
+
+  .topic-header__tags {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+    margin-top: var(--spacing-sm);
+  }
+
+  .topic-content {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  /* Estilos para el contenido Markdown */
+  .prose {
+    line-height: 1.8;
+  }
+
+  .prose :global(h2) {
+    margin-top: var(--spacing-xl);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px dashed var(--color-border);
+  }
+
+  .prose :global(h3) {
+    margin-top: var(--spacing-lg);
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin-left: var(--spacing-lg);
+  }
+
+  .prose :global(li) {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .prose :global(blockquote) {
+    border-left: 4px solid var(--color-accent-primary);
+    padding-left: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+    color: var(--color-text-muted);
+    font-style: italic;
+    background: rgba(0, 212, 255, 0.05);
+    padding: var(--spacing-md);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .prose :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--spacing-md) 0;
+  }
+
+  .prose :global(th),
+  .prose :global(td) {
+    border: 1px solid var(--color-border);
+    padding: var(--spacing-sm);
+    text-align: left;
+  }
+
+  .prose :global(th) {
+    background: var(--gradient-header);
+    color: var(--color-accent-primary);
+  }
+
+  .prose :global(tr:nth-child(even)) {
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .prose :global(img) {
+    border: 2px solid var(--color-border);
+    border-radius: 4px;
+    margin: var(--spacing-md) 0;
+  }
+
+  .prose :global(a) {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+  }
+
+  .topic-nav {
+    display: flex;
+    justify-content: flex-start;
+    padding-top: var(--spacing-lg);
+    border-top: 2px dashed var(--color-border);
+  }
+</style>

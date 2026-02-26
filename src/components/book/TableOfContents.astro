@@ -1,0 +1,290 @@
+---
+/**
+ * Tabla de Contenidos del Libro
+ * Página izquierda con índice estilo libro antiguo
+ */
+import ExLibris from "./ExLibris.astro";
+
+interface Topic {
+  id: string;
+  data: {
+    title: string;
+    category: string;
+    date: Date;
+  };
+}
+
+interface Props {
+  topics: Topic[];
+  currentSlug?: string;
+}
+
+const { topics, currentSlug } = Astro.props;
+
+// Agrupar por categoría
+const groupedTopics = topics.reduce((acc: Record<string, Topic[]>, topic) => {
+  const cat = topic.data.category;
+  if (!acc[cat]) acc[cat] = [];
+  acc[cat].push(topic);
+  return acc;
+}, {});
+
+// Convertir a numeración romana
+function toRoman(num: number): string {
+  const romanNumerals: [number, string][] = [
+    [10, "X"],
+    [9, "IX"],
+    [5, "V"],
+    [4, "IV"],
+    [1, "I"],
+  ];
+  let result = "";
+  for (const [value, symbol] of romanNumerals) {
+    while (num >= value) {
+      result += symbol;
+      num -= value;
+    }
+  }
+  return result;
+}
+
+const categoryNames: Record<string, string> = {
+  "arquitectura-multiagente": "Arquitectura Multiagente",
+  "cache-semantica": "Caché Semántica",
+  "system-design": "System Design",
+};
+---
+
+<nav class="toc" aria-label="Tabla de contenidos">
+  <header class="toc__header">
+    <h2 class="toc__title">Índice</h2>
+    <div class="toc__ornament" aria-hidden="true">
+      <span>❦</span>
+    </div>
+  </header>
+
+  <div class="toc__content">
+    {
+      Object.entries(groupedTopics).map(([category, categoryTopics], index) => (
+        <section class="toc__chapter">
+          <h3 class="toc__chapter-header">
+            <span class="toc__chapter-number">{toRoman(index + 1)}</span>
+            <span class="toc__chapter-title">
+              {categoryNames[category] || category}
+            </span>
+            <span class="toc__chapter-dots" aria-hidden="true" />
+            <span class="toc__chapter-page">{(index + 1) * 10}</span>
+          </h3>
+
+          <ul class="toc__articles">
+            {categoryTopics.map((topic, articleIndex) => {
+              const isActive = topic.id === currentSlug;
+              return (
+                <li class="toc__article">
+                  <a
+                    href={`/topics/${topic.id}`}
+                    class={`toc__link ${isActive ? "toc__link--active" : ""}`}
+                    aria-current={isActive ? "page" : undefined}
+                  >
+                    <span class="toc__article-marker" aria-hidden="true">
+                      §
+                    </span>
+                    <span class="toc__article-title">{topic.data.title}</span>
+                    <span class="toc__article-dots" aria-hidden="true" />
+                    <span class="toc__article-page">
+                      {(index + 1) * 10 + articleIndex + 1}
+                    </span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+
+  <footer class="toc__footer">
+    <ExLibris />
+  </footer>
+</nav>
+
+<style>
+  .toc {
+    height: 80vh !important;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .toc__header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--ink-faded);
+  }
+
+  .toc__title {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--ink-black);
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-2);
+  }
+
+  .toc__ornament {
+    font-size: var(--text-xl);
+    color: var(--ink-faded);
+    opacity: 0.6;
+  }
+
+  .toc__content {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  /* Capítulos */
+  .toc__chapter {
+    margin-bottom: var(--space-6);
+  }
+
+  .toc__chapter-header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    font-family: var(--font-heading);
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--ink-brown);
+    margin-bottom: var(--space-3);
+    padding-bottom: var(--space-1);
+  }
+
+  .toc__chapter-number {
+    font-weight: 700;
+    color: var(--ink-red);
+    min-width: 30px;
+  }
+
+  .toc__chapter-title {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .toc__chapter-dots {
+    flex: 1;
+    border-bottom: 1px dotted var(--ink-faded);
+    margin: 0 var(--space-2);
+    opacity: 0.4;
+  }
+
+  .toc__chapter-page {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-style: italic;
+    color: var(--ink-faded);
+  }
+
+  /* Artículos */
+  .toc__articles {
+    list-style: none;
+    padding-left: var(--space-6);
+  }
+
+  .toc__article {
+    margin-bottom: var(--space-2);
+  }
+
+  .toc__link {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    text-decoration: none;
+    color: var(--ink-black);
+    font-size: var(--text-sm);
+    padding: var(--space-1) 0;
+    transition: color var(--transition-fast);
+  }
+
+  .toc__link:hover {
+    color: var(--ink-red);
+  }
+
+  .toc__link--active {
+    color: var(--ink-red);
+    font-weight: 600;
+  }
+
+  .toc__article-marker {
+    color: var(--ink-faded);
+    font-size: var(--text-xs);
+    opacity: 0.5;
+  }
+
+  .toc__link:hover .toc__article-marker,
+  .toc__link--active .toc__article-marker {
+    opacity: 1;
+    color: var(--ink-red);
+  }
+
+  .toc__article-title {
+    flex: 0 1 auto;
+  }
+
+  .toc__article-dots {
+    flex: 1;
+    border-bottom: 1px dotted var(--ink-faded);
+    margin: 0 var(--space-1);
+    opacity: 0.3;
+    min-width: 20px;
+  }
+
+  .toc__article-page {
+    font-family: var(--font-body);
+    font-style: italic;
+    color: var(--ink-faded);
+    font-size: var(--text-xs);
+  }
+
+  /* Footer con Ex-Libris */
+  .toc__footer {
+    margin-top: auto;
+    padding-top: var(--space-6);
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Hover preview (tooltip) */
+  .toc__link {
+    position: relative;
+  }
+
+  /* Scrollbar personalizada para el TOC */
+  .toc__content::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .toc__content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .toc__content::-webkit-scrollbar-thumb {
+    background: var(--ink-faded);
+    border-radius: 3px;
+    opacity: 0.3;
+  }
+
+  @media (max-width: 1024px) {
+    .toc {
+      padding: var(--space-4);
+    }
+
+    .toc__title {
+      font-size: var(--text-2xl);
+    }
+
+    .toc__footer {
+      display: none;
+    }
+  }
+</style>

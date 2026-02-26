@@ -1,0 +1,123 @@
+---
+/**
+ * Etiqueta de tinta / sello
+ * Para mostrar tags y categorías
+ */
+interface Props {
+  text: string;
+  href?: string;
+  variant?: 'ink' | 'adhesive' | 'wax';
+}
+
+const { text, href, variant = 'ink' } = Astro.props;
+const Tag = href ? 'a' : 'span';
+---
+
+<Tag 
+  class={`tag tag--${variant}`} 
+  href={href}
+>
+  {variant === 'wax' && (
+    <span class="tag__wax-seal" aria-hidden="true"></span>
+  )}
+  <span class="tag__text">{text}</span>
+</Tag>
+
+<style>
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    text-decoration: none;
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .tag:hover {
+    opacity: 1;
+  }
+
+  /* Sello de tinta */
+  .tag--ink {
+    font-family: var(--font-heading);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-blue);
+    border: 1.5px solid currentColor;
+    padding: var(--space-1) var(--space-2);
+    border-radius: 2px;
+    opacity: 0.75;
+    transform: rotate(-1deg);
+  }
+
+  .tag--ink:hover {
+    transform: rotate(0deg) scale(1.05);
+  }
+
+  /* Etiqueta adhesiva */
+  .tag--adhesive {
+    font-family: var(--font-code);
+    font-size: var(--text-xs);
+    background: linear-gradient(180deg, #fffff8 0%, #fffef0 100%);
+    color: var(--ink-black);
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid #d4cca8;
+    box-shadow: 
+      2px 2px 4px rgba(0,0,0,0.1),
+      inset 0 1px 0 rgba(255,255,255,0.8);
+    transform: rotate(1deg);
+  }
+
+  .tag--adhesive:hover {
+    transform: rotate(0deg) translateY(-2px);
+    box-shadow: 
+      3px 3px 6px rgba(0,0,0,0.15),
+      inset 0 1px 0 rgba(255,255,255,0.8);
+  }
+
+  /* Sello de cera */
+  .tag--wax {
+    position: relative;
+    font-family: var(--font-heading);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--page-cream);
+    padding: var(--space-2) var(--space-3);
+    padding-left: var(--space-6);
+  }
+
+  .tag__wax-seal {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background: radial-gradient(
+      circle at 40% 40%,
+      var(--seal-red) 0%,
+      #6a1010 100%
+    );
+    border-radius: 50%;
+    box-shadow: 
+      inset 2px 2px 4px rgba(255,255,255,0.2),
+      inset -2px -2px 4px rgba(0,0,0,0.3),
+      2px 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .tag__wax-seal::after {
+    content: '✦';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .tag__text {
+    position: relative;
+  }
+</style>

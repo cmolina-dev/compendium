@@ -1,0 +1,293 @@
+---
+/**
+ * Página de Bienvenida
+ * Contenido inicial de la página derecha
+ */
+import DropCap from "./DropCap.astro";
+import VisitorCounter from "./VisitorCounter.astro";
+import MarginNote from "./MarginNote.astro";
+
+interface Props {
+  totalArticles: number;
+  totalCategories: number;
+}
+
+const { totalArticles, totalCategories } = Astro.props;
+---
+
+<div class="welcome">
+  <header class="welcome__header">
+    <h1 class="welcome__title">Compendium</h1>
+    <p class="welcome__subtitle">Base de Conocimiento Personal</p>
+    <div class="welcome__flourish" aria-hidden="true">
+      <svg viewBox="0 0 200 20">
+        <path
+          d="M0 10 Q50 0 100 10 Q150 20 200 10"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1"></path>
+        <circle cx="100" cy="10" r="3" fill="currentColor"></circle>
+        <circle cx="80" cy="8" r="1.5" fill="currentColor" opacity="0.5"
+        ></circle>
+        <circle cx="120" cy="8" r="1.5" fill="currentColor" opacity="0.5"
+        ></circle>
+      </svg>
+    </div>
+  </header>
+
+  <div class="welcome__content">
+    <MarginNote position="right" rotation={-3}>
+      Actualizado semanalmente con nuevos aprendizajes
+    </MarginNote>
+
+    <div class="welcome__intro">
+      <DropCap letter="B" variant="ornate" />
+      <p>
+        ienvenido a este compendio de conocimientos, un espacio dedicado a la
+        consolidación y preservación de aprendizajes sobre <em
+          >Inteligencia Artificial</em
+        >,
+        <em>Arquitectura de Software</em> y <em>System Design</em>.
+      </p>
+    </div>
+
+    <p class="welcome__text">
+      Estas páginas contienen notas, diagramas y reflexiones recopiladas durante
+      el estudio y la práctica profesional. Cada entrada representa un fragmento
+      de conocimiento que merece ser documentado y compartido.
+    </p>
+
+    <blockquote class="welcome__quote">
+      <p>"El conocimiento no tiene valor a menos que lo pongas en práctica."</p>
+      <cite>— Anton Chekhov</cite>
+    </blockquote>
+
+    <div class="welcome__stats">
+      <div class="welcome__stat">
+        <span class="welcome__stat-number">{totalArticles}</span>
+        <span class="welcome__stat-label">Artículos</span>
+      </div>
+      <div class="welcome__stat-divider" aria-hidden="true">❖</div>
+      <div class="welcome__stat">
+        <span class="welcome__stat-number">{totalCategories}</span>
+        <span class="welcome__stat-label">Capítulos</span>
+      </div>
+    </div>
+
+    <div class="welcome__instruction">
+      <p class="welcome__instruction-text">
+        <span class="welcome__instruction-icon" aria-hidden="true">☞</span>
+        Navega usando el índice a la izquierda o los marcadores superiores
+      </p>
+    </div>
+  </div>
+
+  <footer class="welcome__footer">
+    <VisitorCounter count={1337} />
+    <p class="welcome__typewriter">
+      Escribiendo el futuro, una página a la vez...
+    </p>
+  </footer>
+</div>
+
+<style>
+  .welcome {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .welcome__header {
+    text-align: center;
+    margin-bottom: var(--space-4);
+  }
+
+  .welcome__title {
+    font-family: var(--font-display);
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    color: var(--ink-black);
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-2);
+    text-shadow: 2px 2px 0 var(--page-aged);
+  }
+
+  .welcome__subtitle {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    font-style: italic;
+    color: var(--ink-faded);
+    letter-spacing: 0.05em;
+  }
+
+  .welcome__flourish {
+    margin-top: var(--space-2);
+    color: var(--gold);
+    opacity: 0.6;
+  }
+
+  .welcome__flourish svg {
+    width: 150px;
+    height: 20px;
+  }
+
+  .welcome__content {
+    flex: 1;
+  }
+
+  .welcome__intro {
+    margin-bottom: var(--space-4);
+    overflow: hidden;
+  }
+
+  .welcome__intro p {
+    font-size: var(--text-lg);
+    line-height: 1.8;
+  }
+
+  .welcome__intro em {
+    color: var(--ink-red);
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  .welcome__text {
+    margin-bottom: var(--space-6);
+    text-align: justify;
+    text-indent: 2em;
+  }
+
+  .welcome__quote {
+    position: relative;
+    margin: var(--space-8) var(--space-4);
+    padding: var(--space-4) var(--space-6);
+    border-left: 3px solid var(--gold);
+    background: rgba(197, 165, 90, 0.05);
+  }
+
+  .welcome__quote p {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    font-style: italic;
+    color: var(--ink-brown);
+    margin-bottom: var(--space-2);
+  }
+
+  .welcome__quote cite {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--ink-faded);
+  }
+
+  .welcome__quote::before {
+    content: '"';
+    position: absolute;
+    top: -10px;
+    left: var(--space-4);
+    font-family: var(--font-display);
+    font-size: 4rem;
+    color: var(--gold);
+    opacity: 0.3;
+    line-height: 1;
+  }
+
+  .welcome__stats {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-8);
+    margin: var(--space-8) 0;
+    padding: var(--space-4);
+  }
+
+  .welcome__stat {
+    text-align: center;
+  }
+
+  .welcome__stat-number {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--ink-red);
+  }
+
+  .welcome__stat-label {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-style: italic;
+    color: var(--ink-faded);
+    text-transform: lowercase;
+  }
+
+  .welcome__stat-divider {
+    color: var(--gold);
+    font-size: var(--text-xl);
+    opacity: 0.6;
+  }
+
+  .welcome__instruction {
+    text-align: center;
+    margin-top: var(--space-6);
+  }
+
+  .welcome__instruction-text {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-handwritten);
+    font-size: var(--text-lg);
+    color: var(--ink-blue);
+  }
+
+  .welcome__instruction-icon {
+    font-size: var(--text-xl);
+  }
+
+  .welcome__footer {
+    margin-top: auto;
+    padding-top: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .welcome__typewriter {
+    font-family: var(--font-handwritten);
+    font-size: var(--text-base);
+    color: var(--ink-faded);
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 3s steps(40) forwards;
+    width: 0;
+  }
+
+  @keyframes typing {
+    to {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .welcome__title {
+      font-size: var(--text-3xl);
+    }
+
+    .welcome__stats {
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .welcome__stat-divider {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .welcome__typewriter {
+      width: auto;
+      animation: none;
+    }
+  }
+</style>

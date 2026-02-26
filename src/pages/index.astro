@@ -1,0 +1,42 @@
+---
+import BookLayout from "../layouts/BookLayout.astro";
+import TableOfContents from "../components/book/TableOfContents.astro";
+import WelcomePage from "../components/book/WelcomePage.astro";
+import { getCollection } from "astro:content";
+
+// Obtener todos los topics
+const allTopics = await getCollection(
+  "topics",
+  ({ data }: { data: { draft?: boolean } }) => !data.draft,
+);
+
+// Ordenar por categoría y fecha
+const sortedTopics = allTopics.sort(
+  (a: (typeof allTopics)[0], b: (typeof allTopics)[0]) => {
+    if (a.data.category !== b.data.category) {
+      return a.data.category.localeCompare(b.data.category);
+    }
+    return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
+  },
+);
+
+// Contar categorías
+const categorySet = new Set<string>();
+allTopics.forEach((t: (typeof allTopics)[0]) =>
+  categorySet.add(t.data.category),
+);
+const totalCategories = categorySet.size;
+---
+
+<BookLayout title="Inicio">
+  <Fragment slot="left-page">
+    <TableOfContents topics={sortedTopics} />
+  </Fragment>
+
+  <Fragment slot="right-page">
+    <WelcomePage
+      totalArticles={allTopics.length}
+      totalCategories={totalCategories}
+    />
+  </Fragment>
+</BookLayout>

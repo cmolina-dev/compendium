@@ -1,0 +1,828 @@
+/* ============================================
+   COMPENDIUM - El Libro del Conocimiento
+   Theme: Grimorio Antiguo / Libro Abierto
+   ============================================ */
+
+/* Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Caveat:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+
+/* ============================================
+   CSS CUSTOM PROPERTIES
+   ============================================ */
+:root {
+  /* === Paleta de Colores === */
+
+  /* Páginas del libro */
+  --page-cream: #f4e8c1;
+  --page-aged: #e8d5a3;
+  --page-shadow: #d4c091;
+  --page-stain: rgba(139, 90, 43, 0.08);
+
+  /* Tintas */
+  --ink-black: #2c1810;
+  --ink-brown: #3d2314;
+  --ink-faded: #5c4033;
+  --ink-red: #8b0000;
+  --ink-blue: #1a3a5c;
+  --ink-green: #2d4a3e;
+
+  /* Cuero y encuadernación */
+  --leather-dark: #3d2b1f;
+  --leather-mid: #5c3d2e;
+  --leather-light: #7a5240;
+  --leather-worn: #8b6914;
+
+  /* Dorado y metálicos */
+  --gold: #c5a55a;
+  --gold-bright: #d4af37;
+  --gold-dark: #a08030;
+  --brass: #b5a642;
+  --copper: #b87333;
+
+  /* Escritorio */
+  --desk-dark: #2a1f1a;
+  --desk-wood: #3e2c23;
+  --desk-grain: #4a3728;
+
+  /* Estados y acentos */
+  --seal-red: #9b2335;
+  --stamp-purple: #4a3560;
+  --bookmark-red: #a03030;
+  --bookmark-blue: #2a4a6a;
+  --bookmark-green: #2a5a3a;
+  --bookmark-gold: #b8952f;
+
+  /* Efectos */
+  --candle-glow: rgba(255, 200, 100, 0.15);
+  --dust-particle: rgba(255, 245, 220, 0.6);
+  --coffee-stain: rgba(101, 67, 33, 0.15);
+
+  /* === Tipografías === */
+  --font-display: "Cinzel Decorative", "Cinzel", serif;
+  --font-heading: "Cinzel", serif;
+  --font-body: "Crimson Text", Georgia, serif;
+  --font-handwritten: "Caveat", cursive;
+  --font-code: "JetBrains Mono", "Consolas", monospace;
+
+  /* === Tamaños de fuente === */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+  --text-4xl: 2.5rem;
+  --text-5xl: 3.5rem;
+
+  /* === Espaciado === */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* === Dimensiones del libro === */
+  --book-max-width: 1400px;
+  --book-padding: 3rem;
+  --page-padding: 2.5rem;
+  --spine-width: 40px;
+  --corner-size: 24px;
+
+  /* === Sombras === */
+  --shadow-page:
+    inset 0 0 30px rgba(0, 0, 0, 0.03), inset -2px 0 10px rgba(0, 0, 0, 0.05);
+  --shadow-book:
+    0 20px 60px rgba(0, 0, 0, 0.4), 0 10px 20px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(197, 165, 90, 0.1);
+  --shadow-emboss:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.1),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.2);
+
+  /* === Transiciones === */
+  --transition-fast: 150ms ease;
+  --transition-base: 300ms ease;
+  --transition-slow: 500ms ease;
+  --transition-page: 600ms cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+/* ============================================
+   RESET Y BASE
+   ============================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--ink-black);
+  background: var(--desk-dark);
+  min-height: 100vh;
+  overflow-x: hidden;
+
+  /* Cursor por defecto */
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext x='0' y='24' font-size='24'%3E%E2%9C%8B%3C/text%3E%3C/svg%3E"),
+    auto;
+}
+
+/* Cursor pointer personalizado */
+a,
+button,
+[role="button"],
+.clickable {
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext x='0' y='24' font-size='24'%3E%E2%98%9E%3C/text%3E%3C/svg%3E")
+      10 0,
+    pointer;
+}
+
+/* ============================================
+   FONDO - ESCRITORIO DE MADERA
+   ============================================ */
+.desk-background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--desk-dark);
+}
+
+/* Elementos decorativos del escritorio -角落装饰 */
+.desk-background::before {
+  content: "✒";
+  position: fixed;
+  bottom: 8%;
+  left: 5%;
+  font-size: 48px;
+  opacity: 0.15;
+  transform: rotate(-20deg);
+  filter: grayscale(100%);
+  z-index: 0;
+}
+
+.desk-background::after {
+  content: "⚱";
+  position: fixed;
+  bottom: 12%;
+  right: 3%;
+  font-size: 36px;
+  opacity: 0.1;
+  z-index: 0;
+}
+
+/* Objetos decorativos del escritorio */
+.desk-decorations {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ============================================
+   ESTRUCTURA DEL LIBRO
+   ============================================ */
+.book-container {
+  position: relative;
+  max-width: var(--book-max-width);
+  margin: var(--space-8) auto;
+  padding: var(--space-4);
+  z-index: 1;
+}
+
+.book {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr var(--spine-width) 1fr;
+  background: var(--leather-dark);
+  border-radius: 8px 16px 16px 8px;
+  box-shadow: var(--shadow-book);
+  min-height: 85vh;
+
+  /* Textura de cuero con costuras */
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E"),
+    linear-gradient(
+      135deg,
+      var(--leather-mid) 0%,
+      var(--leather-dark) 50%,
+      var(--leather-dark) 100%
+    );
+
+  /* Borde dorado sutil */
+  border: 1px solid rgba(197, 165, 90, 0.2);
+}
+
+/* Costuras del libro en los bordes */
+.book::before,
+.book::after {
+  content: "";
+  position: absolute;
+  top: 5%;
+  bottom: 5%;
+  width: 4px;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 8px,
+    var(--leather-light) 8px,
+    var(--leather-light) 10px,
+    transparent 10px,
+    transparent 12px
+  );
+  opacity: 0.4;
+}
+
+.book::before {
+  left: 2px;
+}
+.book::after {
+  right: 2px;
+}
+
+/* Lomo del libro */
+.book-spine {
+  position: relative;
+  background: linear-gradient(
+    90deg,
+    var(--leather-dark) 0%,
+    var(--leather-mid) 20%,
+    var(--leather-dark) 50%,
+    var(--leather-mid) 80%,
+    var(--leather-dark) 100%
+  );
+  border-left: 1px solid rgba(0, 0, 0, 0.3);
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+
+  /* Costuras del lomo */
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 40px,
+    var(--gold-dark) 40px,
+    var(--gold-dark) 42px,
+    transparent 42px,
+    transparent 44px
+  );
+}
+
+.book-spine::before,
+.book-spine::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 3px;
+  background: var(--gold);
+  border-radius: 2px;
+}
+
+.book-spine::before {
+  top: 15%;
+}
+.book-spine::after {
+  bottom: 15%;
+}
+
+/* ============================================
+   PÁGINAS DEL LIBRO
+   ============================================ */
+.book-page {
+  position: relative;
+  background: var(--page-cream);
+  padding: var(--page-padding);
+  overflow: hidden;
+
+  /* Textura de papel */
+  background-image: linear-gradient(
+    to right,
+    var(--page-shadow) 0%,
+    var(--page-cream) 5%,
+    var(--page-cream) 95%,
+    var(--page-aged) 100%
+  );
+}
+
+/* Página izquierda (índice) */
+.book-page--left {
+  border-radius: 4px 0 0 4px;
+  box-shadow:
+    inset -10px 0 20px -10px rgba(0, 0, 0, 0.1),
+    inset 0 0 50px rgba(0, 0, 0, 0.02);
+}
+
+/* Página derecha (contenido) */
+.book-page--right {
+  border-radius: 0 4px 4px 0;
+  box-shadow:
+    inset 10px 0 20px -10px rgba(0, 0, 0, 0.08),
+    inset 0 0 50px rgba(0, 0, 0, 0.02);
+}
+
+/* Efecto de páginas apiladas en los bordes (rayas eliminadas) */
+
+/* Mancha de café (easter egg) */
+.coffee-stain {
+  position: absolute;
+  bottom: 15%;
+  right: 10%;
+  width: 80px;
+  height: 70px;
+  background: radial-gradient(ellipse, var(--coffee-stain) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: rotate(-15deg);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ============================================
+   ESQUINAS METÁLICAS ORNAMENTADAS
+   ============================================ */
+.book-corner {
+  position: absolute;
+  width: var(--corner-size);
+  height: var(--corner-size);
+  z-index: 10;
+}
+
+.book-corner svg {
+  width: 100%;
+  height: 100%;
+  fill: var(--gold);
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.4));
+}
+
+.book-corner--tl {
+  top: 8px;
+  left: 8px;
+}
+.book-corner--tr {
+  top: 8px;
+  right: 8px;
+  transform: scaleX(-1);
+}
+.book-corner--bl {
+  bottom: 8px;
+  left: 8px;
+  transform: scaleY(-1);
+}
+.book-corner--br {
+  bottom: 8px;
+  right: 8px;
+  transform: scale(-1);
+}
+
+/* ============================================
+   NÚMEROS DE PÁGINA
+   ============================================ */
+.page-number {
+  position: absolute;
+  bottom: var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-style: italic;
+  color: var(--ink-faded);
+}
+
+.book-page--left .page-number {
+  left: var(--space-6);
+}
+
+.book-page--right .page-number {
+  right: var(--space-6);
+}
+
+/* ============================================
+   TIPOGRAFÍA DEL LIBRO
+   ============================================ */
+
+/* Títulos principales */
+.book-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-4xl);
+  color: var(--ink-black);
+  text-align: center;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-4);
+
+  /* Efecto de impresión antigua */
+  text-shadow:
+    1px 1px 0 var(--page-aged),
+    2px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Subtítulos de capítulo */
+.chapter-title {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: var(--text-2xl);
+  color: var(--ink-brown);
+  margin: var(--space-6) 0 var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--ink-faded);
+}
+
+/* Numeración romana para capítulos */
+.chapter-number {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  color: var(--ink-red);
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+/* Capitulares (Drop Caps) */
+.drop-cap {
+  float: left;
+  font-family: var(--font-display);
+  font-size: var(--text-5xl);
+  line-height: 0.8;
+  padding-right: var(--space-3);
+  padding-top: var(--space-1);
+  color: var(--ink-red);
+
+  /* Ornamento */
+  text-shadow: 2px 2px 0 var(--gold);
+}
+
+/* Anotaciones marginales */
+.margin-note {
+  font-family: var(--font-handwritten);
+  font-size: var(--text-base);
+  color: var(--ink-blue);
+  line-height: 1.4;
+  transform: rotate(-2deg);
+  padding: var(--space-2);
+}
+
+/* ============================================
+   BOOKMARKS / MARCADORES (Styles moved to BookLayout.astro)
+   ============================================ */
+
+/* ============================================
+   SELLOS Y ETIQUETAS
+   ============================================ */
+
+/* Sello de fecha tipo biblioteca */
+.date-stamp {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--font-code);
+  font-size: var(--text-xs);
+  color: var(--seal-red);
+  border: 2px solid var(--seal-red);
+  padding: var(--space-1) var(--space-2);
+  border-radius: 3px;
+  transform: rotate(-3deg);
+  opacity: 0.85;
+}
+
+.date-stamp::before {
+  content: "FECHA";
+  font-size: 8px;
+  letter-spacing: 2px;
+}
+
+/* Tags como sellos de tinta */
+.ink-tag {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-blue);
+  border: 1px solid currentColor;
+  padding: var(--space-1) var(--space-2);
+  border-radius: 2px;
+  opacity: 0.8;
+  transition: opacity var(--transition-fast);
+}
+
+.ink-tag:hover {
+  opacity: 1;
+}
+
+/* Etiquetas adhesivas */
+.adhesive-label {
+  display: inline-block;
+  font-family: var(--font-code);
+  font-size: var(--text-xs);
+  background: #fffef0;
+  color: var(--ink-black);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid #e0d9b8;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  transform: rotate(1deg);
+}
+
+/* ============================================
+   BLOQUES DE CÓDIGO (Recortes pegados / CRT)
+   ============================================ */
+.code-paper {
+  position: relative;
+  background: #fffef5;
+  border: 1px solid #d4cba8;
+  padding: var(--space-4);
+  margin: var(--space-4) 0;
+  font-family: var(--font-code);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  overflow-x: auto;
+
+  /* Efecto de papel pegado */
+  box-shadow:
+    3px 3px 8px rgba(0, 0, 0, 0.15),
+    inset 0 0 20px rgba(0, 0, 0, 0.02);
+  transform: rotate(-0.5deg);
+}
+
+.code-paper::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 20%;
+  right: 20%;
+  height: 16px;
+  background: rgba(255, 230, 150, 0.8);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Alternativa: Pantalla CRT */
+.code-crt {
+  position: relative;
+  background: #0a0a0a;
+  border: 8px solid #2a2a2a;
+  border-radius: 8px;
+  padding: var(--space-4);
+  margin: var(--space-4) 0;
+  font-family: var(--font-code);
+  font-size: var(--text-sm);
+  color: #33ff33;
+  line-height: 1.5;
+  overflow-x: auto;
+
+  /* Efecto CRT */
+  box-shadow:
+    inset 0 0 50px rgba(0, 255, 0, 0.03),
+    0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* .code-crt::before scanlines eliminadas */
+
+/* ============================================
+   EX-LIBRIS
+   ============================================ */
+.ex-libris {
+  position: absolute;
+  bottom: var(--space-8);
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  opacity: 0.6;
+}
+
+.ex-libris__frame {
+  width: 80px;
+  height: 100px;
+  border: 2px solid var(--ink-faded);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ex-libris__text {
+  font-family: var(--font-heading);
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-faded);
+}
+
+/* ============================================
+   EFECTOS ESPECIALES
+   ============================================ */
+
+/* Partículas de polvo */
+.dust-particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.dust-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--dust-particle);
+  border-radius: 50%;
+  animation: float-dust 15s infinite ease-in-out;
+}
+
+@keyframes float-dust {
+  0%,
+  100% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-10vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Efecto de escritura con pluma */
+.typewriter {
+  font-family: var(--font-handwritten);
+  font-size: var(--text-lg);
+  color: var(--ink-brown);
+  overflow: hidden;
+  border-right: 2px solid var(--ink-brown);
+  white-space: nowrap;
+  animation:
+    typing 3s steps(40, end),
+    blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: var(--ink-brown);
+  }
+}
+
+/* ============================================
+   MODO VELA (DARK MODE)
+   ============================================ */
+[data-theme="candle"] {
+  --page-cream: #3a3225;
+  --page-aged: #2e2820;
+  --ink-black: #d4c4a8;
+  --ink-brown: #c9b896;
+  --ink-faded: #a89878;
+}
+
+[data-theme="candle"] .desk-background::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    var(--candle-glow),
+    transparent 70%
+  );
+  animation: candle-flicker 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* Viñeta en modo vela */
+[data-theme="candle"] .book-wrapper::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  pointer-events: none;
+  z-index: 998;
+}
+
+@keyframes candle-flicker {
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  25% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 0.85;
+  }
+  75% {
+    opacity: 0.7;
+  }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .book {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .book-spine {
+    display: none;
+  }
+
+  .book-page--left {
+    border-radius: 4px 4px 0 0;
+  }
+
+  .book-page--right {
+    border-radius: 0 0 4px 4px;
+  }
+
+  .bookmarks {
+    position: static;
+    flex-direction: row;
+    justify-content: center;
+    padding: var(--space-4);
+  }
+
+  .bookmark {
+    width: 40px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --page-padding: 1.5rem;
+    --book-padding: 1rem;
+  }
+
+  .book-title {
+    font-size: var(--text-2xl);
+  }
+
+  .chapter-title {
+    font-size: var(--text-xl);
+  }
+
+  .drop-cap {
+    font-size: var(--text-3xl);
+  }
+}
+
+/* ============================================
+   ACCESIBILIDAD
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus visible */
+:focus-visible {
+  outline: 2px dashed var(--ink-red);
+  outline-offset: 4px;
+}
+
+/* Selección de texto */
+::selection {
+  background: var(--gold);
+  color: var(--ink-black);
+}

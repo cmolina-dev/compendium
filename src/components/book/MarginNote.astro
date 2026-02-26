@@ -1,0 +1,105 @@
+---
+/**
+ * Anotación marginal manuscrita
+ * Simula notas escritas a mano en el margen del libro
+ */
+interface Props {
+  position?: 'left' | 'right';
+  rotation?: number;
+}
+
+const { position = 'right', rotation = -2 } = Astro.props;
+---
+
+<aside 
+  class={`margin-note margin-note--${position}`} 
+  style={`--rotation: ${rotation}deg`}
+  role="note"
+>
+  <span class="margin-note__bracket" aria-hidden="true">{</span>
+  <span class="margin-note__content">
+    <slot />
+  </span>
+</aside>
+
+<style>
+  .margin-note {
+    font-family: var(--font-handwritten);
+    font-size: var(--text-base);
+    color: var(--ink-blue);
+    line-height: 1.4;
+    transform: rotate(var(--rotation));
+    max-width: 200px;
+    padding: var(--space-2);
+  }
+
+  .margin-note--left {
+    float: left;
+    margin-right: var(--space-4);
+    margin-left: calc(-1 * var(--space-4));
+    text-align: right;
+  }
+
+  .margin-note--right {
+    float: right;
+    margin-left: var(--space-4);
+    margin-right: calc(-1 * var(--space-4));
+    text-align: left;
+  }
+
+  .margin-note__bracket {
+    display: block;
+    font-size: var(--text-2xl);
+    color: var(--ink-blue);
+    opacity: 0.5;
+    line-height: 0.5;
+    margin-bottom: var(--space-1);
+  }
+
+  .margin-note--left .margin-note__bracket {
+    transform: rotate(180deg);
+    text-align: left;
+  }
+
+  .margin-note__content {
+    display: block;
+    /* Efecto de tinta desigual */
+    text-shadow: 0.5px 0.5px 0 rgba(26, 58, 92, 0.1);
+  }
+
+  /* Línea de conexión sutil */
+  .margin-note::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 1px;
+    background: var(--ink-blue);
+    opacity: 0.2;
+  }
+
+  .margin-note--right::after {
+    left: -35px;
+    top: 50%;
+  }
+
+  .margin-note--left::after {
+    right: -35px;
+    top: 50%;
+  }
+
+  @media (max-width: 1024px) {
+    .margin-note {
+      float: none;
+      margin: var(--space-4) 0;
+      max-width: 100%;
+      padding: var(--space-3);
+      background: rgba(26, 58, 92, 0.03);
+      border-left: 2px solid var(--ink-blue);
+      border-radius: 0 4px 4px 0;
+    }
+
+    .margin-note::after {
+      display: none;
+    }
+  }
+</style>

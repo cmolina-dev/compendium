@@ -1,0 +1,49 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import BookLayout from "../../layouts/BookLayout.astro";
+import TableOfContents from "../../components/book/TableOfContents.astro";
+import ArticlePage from "../../components/book/ArticlePage.astro";
+
+export async function getStaticPaths() {
+  const topics = await getCollection("topics");
+  return topics.map((topic: CollectionEntry<"topics">) => ({
+    params: { slug: topic.id },
+    props: { topic },
+  }));
+}
+
+interface Props {
+  topic: CollectionEntry<"topics">;
+}
+
+const { topic } = Astro.props;
+const { Content } = await render(topic);
+
+// Obtener todos los topics para el índice
+const allTopics = await getCollection(
+  "topics",
+  ({ data }: { data: { draft?: boolean } }) => !data.draft,
+);
+const sortedTopics = allTopics.sort(
+  (a: (typeof allTopics)[0], b: (typeof allTopics)[0]) => {
+    if (a.data.category !== b.data.category) {
+      return a.data.category.localeCompare(b.data.category);
+    }
+    return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
+  },
+);
+---
+
+<BookLayout title={topic.data.title} currentSlug={topic.id}>
+  <Fragment slot="spread">
+    <ArticlePage
+      title={topic.data.title}
+      category={topic.data.category}
+      description={topic.data.description}
+      date={topic.data.date}
+      tags={topic.data.tags}
+    >
+      <Content />
+    </ArticlePage>
+  </Fragment>
+</BookLayout>

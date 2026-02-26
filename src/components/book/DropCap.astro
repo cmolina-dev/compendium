@@ -1,0 +1,90 @@
+---
+/**
+ * Capitular ornamentada (Drop Cap)
+ * Estilo manuscrito iluminado medieval
+ */
+interface Props {
+  letter: string;
+  variant?: 'simple' | 'ornate' | 'gold';
+}
+
+const { letter, variant = 'ornate' } = Astro.props;
+---
+
+<span class={`drop-cap drop-cap--${variant}`} aria-hidden="true">
+  <span class="drop-cap__letter">{letter.toUpperCase()}</span>
+  {variant === 'ornate' && (
+    <svg class="drop-cap__ornament" viewBox="0 0 60 60" aria-hidden="true">
+      <!-- Fondo decorativo -->
+      <rect x="2" y="2" width="56" height="56" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+      <rect x="5" y="5" width="50" height="50" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.2"/>
+      <!-- Esquinas florales -->
+      <circle cx="8" cy="8" r="2" fill="currentColor" opacity="0.4"/>
+      <circle cx="52" cy="8" r="2" fill="currentColor" opacity="0.4"/>
+      <circle cx="8" cy="52" r="2" fill="currentColor" opacity="0.4"/>
+      <circle cx="52" cy="52" r="2" fill="currentColor" opacity="0.4"/>
+      <!-- Volutas -->
+      <path d="M8 15 Q15 10 15 20" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.3"/>
+      <path d="M52 15 Q45 10 45 20" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.3"/>
+    </svg>
+  )}
+</span>
+
+<style>
+  .drop-cap {
+    position: relative;
+    float: left;
+    margin-right: var(--space-3);
+    margin-bottom: var(--space-1);
+  }
+
+  .drop-cap__letter {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 0.85;
+    color: var(--ink-red);
+  }
+
+  .drop-cap__ornament {
+    position: absolute;
+    inset: -4px;
+    width: calc(100% + 8px);
+    height: calc(100% + 8px);
+    color: var(--gold);
+    pointer-events: none;
+  }
+
+  /* Variante simple */
+  .drop-cap--simple .drop-cap__letter {
+    font-size: 3.5rem;
+    text-shadow: 2px 2px 0 var(--page-aged);
+  }
+
+  /* Variante ornamentada */
+  .drop-cap--ornate .drop-cap__letter {
+    font-size: 4rem;
+    padding: var(--space-2);
+    text-shadow: 
+      2px 2px 0 var(--gold),
+      3px 3px 0 rgba(0,0,0,0.1);
+  }
+
+  /* Variante dorada */
+  .drop-cap--gold .drop-cap__letter {
+    font-size: 3.5rem;
+    color: var(--gold);
+    text-shadow: 
+      1px 1px 0 var(--gold-dark),
+      2px 2px 2px rgba(0,0,0,0.2);
+    background: linear-gradient(
+      135deg,
+      var(--gold-bright) 0%,
+      var(--gold) 50%,
+      var(--gold-dark) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+</style>

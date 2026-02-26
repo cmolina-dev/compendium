@@ -1,0 +1,106 @@
+---
+/**
+ * Sello de fecha estilo biblioteca
+ * Simula los sellos de goma de préstamos de libros
+ */
+interface Props {
+  date: Date;
+  variant?: 'red' | 'purple' | 'blue';
+}
+
+const { date, variant = 'red' } = Astro.props;
+
+const day = date.getDate().toString().padStart(2, '0');
+const month = date.toLocaleDateString('es-ES', { month: 'short' }).toUpperCase();
+const year = date.getFullYear();
+
+const colorMap = {
+  red: 'stamp--red',
+  purple: 'stamp--purple',
+  blue: 'stamp--blue'
+};
+---
+
+<time class={`date-stamp ${colorMap[variant]}`} datetime={date.toISOString()}>
+  <span class="date-stamp__label">FECHA</span>
+  <span class="date-stamp__date">
+    <span class="date-stamp__day">{day}</span>
+    <span class="date-stamp__month">{month}</span>
+    <span class="date-stamp__year">{year}</span>
+  </span>
+</time>
+
+<style>
+  .date-stamp {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: var(--font-code);
+    padding: var(--space-2) var(--space-3);
+    border: 2px solid currentColor;
+    border-radius: 4px;
+    transform: rotate(-3deg);
+    opacity: 0.85;
+    
+    /* Efecto de sello de goma (impresión irregular) */
+    background: 
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 1px,
+        rgba(255,255,255,0.1) 1px,
+        rgba(255,255,255,0.1) 2px
+      );
+  }
+
+  .date-stamp__label {
+    font-size: 7px;
+    letter-spacing: 3px;
+    opacity: 0.7;
+  }
+
+  .date-stamp__date {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    font-weight: 600;
+  }
+
+  .date-stamp__day {
+    font-size: var(--text-lg);
+  }
+
+  .date-stamp__month {
+    font-size: var(--text-xs);
+  }
+
+  .date-stamp__year {
+    font-size: var(--text-xs);
+  }
+
+  /* Colores */
+  .stamp--red {
+    color: var(--seal-red);
+    border-color: var(--seal-red);
+  }
+
+  .stamp--purple {
+    color: var(--stamp-purple);
+    border-color: var(--stamp-purple);
+  }
+
+  .stamp--blue {
+    color: var(--ink-blue);
+    border-color: var(--ink-blue);
+  }
+
+  /* Efecto de desgaste */
+  .date-stamp::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse at 30% 30%, transparent 0%, rgba(255,255,255,0.1) 100%);
+    pointer-events: none;
+  }
+</style>

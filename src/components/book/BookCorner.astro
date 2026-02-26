@@ -1,0 +1,65 @@
+---
+/**
+ * Esquina metálica ornamentada para el libro
+ * Inspirada en encuadernaciones antiguas con detalles dorados
+ */
+interface Props {
+  position: 'tl' | 'tr' | 'bl' | 'br';
+}
+
+const { position } = Astro.props;
+---
+
+<div class={`book-corner book-corner--${position}`}>
+  <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+    <!-- Marco exterior -->
+    <path 
+      d="M0 0 L40 0 L40 8 L8 8 L8 40 L0 40 Z" 
+      fill="currentColor"
+    />
+    <!-- Detalle interior -->
+    <path 
+      d="M4 4 L32 4 L32 6 L6 6 L6 32 L4 32 Z" 
+      fill="currentColor"
+      opacity="0.6"
+    />
+    <!-- Ornamento central -->
+    <circle cx="12" cy="12" r="3" fill="currentColor" opacity="0.8"/>
+    <path 
+      d="M12 6 L12 10 M6 12 L10 12" 
+      stroke="currentColor" 
+      stroke-width="1"
+      opacity="0.5"
+    />
+    <!-- Filigrana -->
+    <path 
+      d="M16 4 Q20 8 16 12 M4 16 Q8 20 12 16" 
+      stroke="currentColor" 
+      stroke-width="0.8"
+      fill="none"
+      opacity="0.4"
+    />
+  </svg>
+</div>
+
+<style>
+  .book-corner {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    z-index: 10;
+    color: var(--gold);
+    filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.4));
+    pointer-events: none;
+  }
+
+  .book-corner svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .book-corner--tl { top: 0; left: 0; }
+  .book-corner--tr { top: 0; right: 0; transform: scaleX(-1); }
+  .book-corner--bl { bottom: 0; left: 0; transform: scaleY(-1); }
+  .book-corner--br { bottom: 0; right: 0; transform: scale(-1); }
+</style>
